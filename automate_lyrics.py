@@ -7,7 +7,6 @@ onto the screen.
 
 import os
 import spotipy
-import time
 import lyricsgenius as genius
 
 # store information in environment variables
@@ -41,14 +40,19 @@ prev_title = ''
 while True:
     # getting the song data from spotify
     spotify_current = spotify_obj.currently_playing()
-    artist_name = spotify_current['item']['album']['artists'][0]['name']
-    title = spotify_current['item']['name']
+    try:
+        artist_name = spotify_current['item']['album']['artists'][0]['name']
+    except:
+        continue
+    try:
+        title = spotify_current['item']['name']
+    except:
+        continue
     # purify the title so that genius search provides correct lyrics output
     title = title.split('feat')[0].strip()
     title = title.split('(')[0].strip()
 
     if title == prev_title:
-        time.sleep(2)
         continue
     else:
         prev_title = title
