@@ -38,10 +38,17 @@ spotify_obj = spotipy.Spotify(auth=token)
 # genius object
 genius_obj = genius.Genius(genius_access_token)
 
-# getting the song data from spotify
-current = spotify_obj.currently_playing()
-# print(json.dumps(current, sort_keys=False, indent=4))
-artist_name = current['item']['album']['artists'][0]['name']
-title = current['item']['name']
+prev_title = ''
+while True:
+    # getting the song data from spotify
+    spotify_current = spotify_obj.currently_playing()
+    artist_name = spotify_current['item']['album']['artists'][0]['name']
+    title = spotify_current['item']['name']
 
-# now get the lyrics for this song
+    if title == prev_title:
+        continue
+
+    # now get the lyrics for this song
+    song = genius_obj.search_song(title=title, artist=artist_name)
+    lyrics = song.lyrics
+    print(lyrics)
