@@ -10,10 +10,10 @@ import spotipy
 import lyricsgenius as genius
 
 # store information in environment variables
-# export SPOTIPY_CLIENT_ID='ef1d8a4f97f64bb893d8deedd367f1fa'
-# export SPOTIPY_CLIENT_SECRET='a1a1204339c74871b0b94c6a01588db9'
-# export SPOTIPY_REDIRECT_URI='https://google.com'
-# export GENIUS_ACCESS_TOKEN='yrV9GhG6J-To-d4KDD0ZVbwaUuIXHbI1LikQuuZH7kZrk3Hiky1YgtJfqMG_bm6t'
+# export SPOTIPY_CLIENT_ID = 'ef1d8a4f97f64bb893d8deedd367f1fa'
+# export SPOTIPY_CLIENT_SECRET = 'a1a1204339c74871b0b94c6a01588db9'
+# export SPOTIPY_REDIRECT_URI = 'https://google.com'
+# export GENIUS_ACCESS_TOKEN = 'yrV9GhG6J-To-d4KDD0ZVbwaUuIXHbI1LikQuuZH7kZrk3Hiky1YgtJfqMG_bm6t'
 
 # accessing data from the environment
 sp_client_id = os.environ['SPOTIPY_CLIENT_ID']
@@ -36,7 +36,7 @@ spotify_obj = spotipy.Spotify(auth=token)
 # genius object
 genius_obj = genius.Genius(genius_access_token)
 
-prev_title = ''
+prev_title, prev_artist = '', ''
 while True:
     # getting the song data from spotify
     spotify_current = spotify_obj.currently_playing()
@@ -52,10 +52,11 @@ while True:
     title = title.split('feat')[0].strip()
     title = title.split('(')[0].strip()
 
-    if title == prev_title:
+    if title == prev_title and artist_name == prev_artist:
         continue
     else:
         prev_title = title
+        prev_artist = artist_name
         # now get the lyrics for this song
         print('\n\n====================================================================================\n')
         song = genius_obj.search_song(title=title, artist=artist_name)
