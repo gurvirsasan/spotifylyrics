@@ -6,7 +6,6 @@ onto the screen.
 """
 
 import os
-import json
 import spotipy
 import time
 import lyricsgenius as genius
@@ -44,11 +43,18 @@ while True:
     spotify_current = spotify_obj.currently_playing()
     artist_name = spotify_current['item']['album']['artists'][0]['name']
     title = spotify_current['item']['name']
+    # purify the title so that genius search provides correct lyrics output
+    title = title.split('feat')[0].strip()
+    title = title.split('(')[0].strip()
 
     if title == prev_title:
+        time.sleep(2)
         continue
-
-    # now get the lyrics for this song
-    song = genius_obj.search_song(title=title, artist=artist_name)
-    lyrics = song.lyrics
-    print(lyrics)
+    else:
+        prev_title = title
+        # now get the lyrics for this song
+        print('\n\n====================================================================================\n')
+        song = genius_obj.search_song(title=title, artist=artist_name)
+        lyrics = song.lyrics
+        print()
+        print(lyrics)
